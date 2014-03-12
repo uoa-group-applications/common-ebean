@@ -61,7 +61,7 @@ Then you can control whether Ebean actually logs, and what it logs using "named"
     <logger name="org.avaje.ebean.SUM" level="TRACE"/>
 
 == Auto-scanning for entity classes
-To increase startup time, you should include an entry in your /ebean.properties file:
+To decrease startup time, you should include an entry in your /ebean.properties file:
 
 ebean.search.jars=jar-partial-name1, jar-partial-name2
 
