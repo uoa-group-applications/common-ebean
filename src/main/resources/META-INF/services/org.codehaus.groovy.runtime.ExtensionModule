@@ -1,0 +1,3 @@
+moduleName = GroovyEbeanExtensions
+moduleVersion = 1.1
+extensionClasses = nz.ac.auckland.common.ebean.EbeanExtensionModule

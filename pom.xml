@@ -9,7 +9,7 @@
 		<version>1.4</version>
 	</parent>
 
-	<groupId>nz.ac.auckland.common</groupId>
+	<groupId>nz.ac.auckland.groupapps.common</groupId>
 	<artifactId>common-ebean</artifactId>
 	<packaging>jar</packaging>
 
