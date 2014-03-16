@@ -3,6 +3,7 @@ package nz.ac.auckland.common.ebean
 import com.avaje.ebean.config.DataSourceConfig
 import com.avaje.ebean.config.GlobalProperties
 import com.avaje.ebean.config.ServerConfig
+import groovy.transform.CompileStatic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -10,16 +11,9 @@ import org.slf4j.LoggerFactory
 
  * author: Richard Vowles - http://gplus.to/RichardVowles
  */
+@CompileStatic
 class EbeanServerConfig extends ServerConfig {
   private static final Logger log = LoggerFactory.getLogger(EbeanServerConfig)
-
-  private Map<String, String> ourDefaults = [
-    "databaseDriver":"oracle.jdbc.driver.OracleDriver",
-    "minConnections":"1",
-    "maxConnections":"25",
-    "heartbeatsql":"select count(*) from dual",
-    "isolationlevel":"read_committed"
-  ]
 
   @Override
   boolean isDefaultServer() {
@@ -27,6 +21,14 @@ class EbeanServerConfig extends ServerConfig {
   }
 
   class SystemPropertyConfigPropertyMap implements GlobalProperties.PropertySource {
+	  protected Map<String, String> ourDefaults = [
+		  "databaseDriver":"oracle.jdbc.driver.OracleDriver",
+		  "minConnections":"1",
+		  "maxConnections":"25",
+		  "heartbeatsql":"select count(*) from dual",
+		  "isolationlevel":"read_committed"
+	  ]
+
     @Override
     String getServerName() {
       return "default";
