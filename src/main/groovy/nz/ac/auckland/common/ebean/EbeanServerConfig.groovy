@@ -1,5 +1,6 @@
 package nz.ac.auckland.common.ebean
 
+import com.avaje.ebean.config.DataSourceConfig
 import com.avaje.ebean.config.PropertiesWrapper
 import com.avaje.ebean.config.ServerConfig
 import groovy.transform.CompileStatic
@@ -24,12 +25,12 @@ class EbeanServerConfig extends ServerConfig {
 
 	@Override
 	protected void loadDataSourceSettings(PropertiesWrapper p) {
-		dataSourceConfig.loadSettings(p)
+		dataSourceConfig.loadSettings(p);
 	}
 
 	class SystemPropertyConfigPropertyMap extends PropertiesWrapper {
 
-		public static final Map<String, String> UOA_DEFAULTS = [
+		public final Map<String, String> UOA_DEFAULTS = [
 				"databaseDriver": "oracle.jdbc.driver.OracleDriver",
 				"minConnections": "1",
 				"maxConnections": "25",
@@ -54,18 +55,15 @@ class EbeanServerConfig extends ServerConfig {
 				return defaultValue;
 			}
 
-			String value = getValueFromMap(propertyMap.asProperties(), key);
+			// System Property is priority
+			String value = getValueFromMap(System.properties, key);
+
+			if (value == null) {
+				value = getValueFromMap(propertyMap.asProperties(), key);
+			}
 
 			if (value == null) {
 				value = getValueFromMap(propertyMap.asProperties(), key.toLowerCase());
-			}
-
-			if (value == null) {
-				value = getValueFromMap(System.properties, key);
-			}
-
-			if (value == null) {
-				value = getValueFromMap(System.properties, key.toLowerCase());
 			}
 
 			return value == null ? defaultValue : value;
