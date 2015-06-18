@@ -1,101 +1,93 @@
 package nz.ac.auckland.common.ebean
 
-import com.avaje.ebean.config.DataSourceConfig
-import com.avaje.ebean.config.GlobalProperties
+import com.avaje.ebean.config.PropertiesWrapper
 import com.avaje.ebean.config.ServerConfig
 import groovy.transform.CompileStatic
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 /**
-
- * author: Richard Vowles - http://gplus.to/RichardVowles
+ * @author: Richard Vowles - http://gplus.to/RichardVowles
  */
 @CompileStatic
 class EbeanServerConfig extends ServerConfig {
-  private static final Logger log = LoggerFactory.getLogger(EbeanServerConfig)
 
-  @Override
-  boolean isDefaultServer() {
-    return true;
-  }
+	/**
+	 * Default constructor
+	 */
+	public EbeanServerConfig() {
+		loadSettings(new SystemPropertyConfigPropertyMap())
+	}
 
-  class SystemPropertyConfigPropertyMap implements GlobalProperties.PropertySource {
-	  protected Map<String, String> ourDefaults = [
-		  "databaseDriver":"oracle.jdbc.driver.OracleDriver",
-		  "minConnections":"1",
-		  "maxConnections":"25",
-		  "heartbeatsql":"select count(*) from dual",
-		  "isolationlevel":"read_committed"
-	  ]
+	@Override
+	public boolean isDefaultServer() {
+		return true
+	}
 
-    @Override
-    String getServerName() {
-      return "default";
-    }
+	@Override
+	protected void loadDataSourceSettings(PropertiesWrapper p) {
+		dataSourceConfig.loadSettings(p)
+	}
 
-    private String getKey(String key, String defaultValue) {
-      String val = System.getProperty("dataSource." + key)
+	class SystemPropertyConfigPropertyMap extends PropertiesWrapper {
 
-      if (val) {
-        log.trace("ebean system property key ${key} : ${val}")
-        return val
-      }
+		public static final Map<String, String> UOA_DEFAULTS = [
+				"databaseDriver": "oracle.jdbc.driver.OracleDriver",
+				"minConnections": "1",
+				"maxConnections": "25",
+				"heartbeatsql"  : "select count(*) from dual",
+				"isolationlevel": "read_committed"
+		]
 
-      val = ourDefaults[key]
+		public static final String DEFAULT_PREFIX = "dataSource"
 
-      if (val) {
-        log.trace("ebean our defaults key ${key} : ${val}")
-        return val
-      }
+		public static final String DEFAULT_SERVER = "db"
 
-      return defaultValue
-    }
+		public SystemPropertyConfigPropertyMap() {
+			super(DEFAULT_PREFIX, DEFAULT_SERVER, new Properties())
+			propertyMap.putEvalAll(UOA_DEFAULTS)
+			properties.putAll(UOA_DEFAULTS)
+		}
 
-    @Override
-    String get(String key, String defaultValue) {
-      return getKey(key, defaultValue)
-    }
+		@Override
+		public String get(String key, String defaultValue) {
 
-    @Override
-    int getInt(String key, int defaultValue) {
-      String val = getKey(key, null)
+			if (key == null) {
+				return defaultValue;
+			}
 
-      if (!val) return defaultValue
+			String value = getValueFromMap(propertyMap.asProperties(), key);
 
-      return Integer.parseInt(val)
-    }
+			if (value == null) {
+				value = getValueFromMap(propertyMap.asProperties(), key.toLowerCase());
+			}
 
-    @Override
-    boolean getBoolean(String key, boolean defaultValue) {
-      String val = getKey(key, Boolean.toString(defaultValue))
+			if (value == null) {
+				value = getValueFromMap(System.properties, key);
+			}
 
-      return Boolean.parseBoolean(val)
-    }
+			if (value == null) {
+				value = getValueFromMap(System.properties, key.toLowerCase());
+			}
 
-    @Override
-    def <T extends Enum<T>> T getEnum(Class<T> enumType, String key, T defaultValue) {
-      String level = get(key, defaultValue.name());
-      return Enum.valueOf(enumType, level.toUpperCase());
-    }
-  }
+			return value == null ? defaultValue : value;
+		}
 
+		/**
+		 * get a value from map by key
+		 */
+		public String getValueFromMap(Map map, String key) {
+			String value = null;
+			if (serverName != null && prefix != null) {
+				value = map.get(prefix + "." + serverName + "." + key);
+			}
+			if (value == null && prefix != null) {
+				value = map.get(prefix + "." + key);
+			}
+			if (value == null) {
+				value = map.get(key);
+			}
+			return value;
+		}
 
-  public EbeanServerConfig() {
-    GlobalProperties.setSkipPrimaryServer(true) // otherwise ebean tries to create a server with no config before we get to set one up
+	}
 
-    GlobalProperties.PropertySource properties = new SystemPropertyConfigPropertyMap()
-
-    DataSourceConfig dsConfig = new DataSourceConfig()
-    dsConfig.loadSettingsCustomPrefix("", properties)
-
-    setDataSourceConfig(dsConfig)
-
-    loadSettings(properties)
-  }
-
-  @Override
-  protected void loadDataSourceSettings(GlobalProperties.PropertySource p) {
-    // do not reload
-  }
 }

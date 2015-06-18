@@ -13,7 +13,7 @@
 	<packaging>jar</packaging>
 
 	<name>common-ebean</name>
-	<version>2.3-SNAPSHOT</version>
+	<version>3.1-SNAPSHOT</version>
 	<description>Provides Spring config and ServerConfig necessary to support ebean</description>
 
 	<scm>
@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>nz.ac.auckland.composite</groupId>
 			<artifactId>composite-ebean</artifactId>
-			<version>[2.2,3)</version>
+			<version>[3.2,4)</version>
 		</dependency>
 
 		<dependency>
