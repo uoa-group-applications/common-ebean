@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>nz.ac.auckland.groupapps.parent</groupId>
 		<artifactId>parent-groovy-groupapps-central</artifactId>
-		<version>1.4</version>
+		<version>1.5</version>
 	</parent>
 
 	<groupId>nz.ac.auckland.groupapps.common</groupId>
@@ -33,13 +33,13 @@
 		<dependency>
 			<groupId>nz.ac.auckland.composite</groupId>
 			<artifactId>composite-groovy</artifactId>
-			<version>[5.7,)</version>
+			<version>[6.4,)</version>
 		</dependency>
 
 		<dependency>
 			<groupId>nz.ac.auckland.composite</groupId>
 			<artifactId>composite-ebean</artifactId>
-			<version>[2,)</version>
+			<version>[2,3)</version>
 		</dependency>
 
 		<dependency>
