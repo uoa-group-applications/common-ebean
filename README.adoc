@@ -1,6 +1,6 @@
 = common-ebean
 
-This is a module to provide Ebean support, and load the properties from System.properties instead of ebean.properties.
+This is a module to provide Ebean supports, and load the properties from System.properties instead of ebean.properties.
 
 The latest version V3.x has been re-implemented based on Ebean ORM version 4.7.1, which is because Ebean V4.5+ has been deprecated GlobalProperties class. If you have encounter any issues with V3.x, please raise the issue ticket, and restrict the version range as [2.2,3).
 
