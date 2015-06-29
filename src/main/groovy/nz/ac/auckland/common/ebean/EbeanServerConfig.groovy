@@ -16,6 +16,8 @@ class EbeanServerConfig extends ServerConfig {
 	 */
 	public EbeanServerConfig() {
 		loadSettings(new SystemPropertyConfigPropertyMap())
+
+		addPackage()
 	}
 
 	@Override
@@ -46,6 +48,12 @@ class EbeanServerConfig extends ServerConfig {
 			super(DEFAULT_PREFIX, DEFAULT_SERVER, new Properties())
 			propertyMap.putEvalAll(UOA_DEFAULTS)
 			properties.putAll(UOA_DEFAULTS)
+
+		}
+
+		@Override
+		public SystemPropertyConfigPropertyMap withPrefix(String prefix) {
+			return new SystemPropertyConfigPropertyMap()
 		}
 
 		@Override
