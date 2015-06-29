@@ -14,7 +14,7 @@ class EbeanServerConfig extends ServerConfig {
 	 * Default constructor
 	 */
 	public EbeanServerConfig() {
-		loadSettings(new SystemPropertyConfigPropertyMap())
+		loadSettings(new SystemPropertyWrapper())
 	}
 
 	@Override
@@ -24,7 +24,7 @@ class EbeanServerConfig extends ServerConfig {
 
 	@Override
 	public void loadFromProperties(Properties properties) {
-		loadSettings(new SystemPropertyConfigPropertyMap())
+		loadSettings(new SystemPropertyWrapper())
 	}
 
 	@Override
