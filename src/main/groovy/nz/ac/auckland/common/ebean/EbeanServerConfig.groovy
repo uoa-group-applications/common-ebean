@@ -1,6 +1,5 @@
 package nz.ac.auckland.common.ebean
 
-import com.avaje.ebean.config.DataSourceConfig
 import com.avaje.ebean.config.PropertiesWrapper
 import com.avaje.ebean.config.ServerConfig
 import groovy.transform.CompileStatic
@@ -16,8 +15,6 @@ class EbeanServerConfig extends ServerConfig {
 	 */
 	public EbeanServerConfig() {
 		loadSettings(new SystemPropertyConfigPropertyMap())
-
-		addPackage()
 	}
 
 	@Override
@@ -26,74 +23,13 @@ class EbeanServerConfig extends ServerConfig {
 	}
 
 	@Override
-	protected void loadDataSourceSettings(PropertiesWrapper p) {
-		dataSourceConfig.loadSettings(p);
+	public void loadFromProperties(Properties properties) {
+		loadSettings(new SystemPropertyConfigPropertyMap())
 	}
 
-	class SystemPropertyConfigPropertyMap extends PropertiesWrapper {
-
-		public final Map<String, String> UOA_DEFAULTS = [
-				"databaseDriver": "oracle.jdbc.driver.OracleDriver",
-				"minConnections": "1",
-				"maxConnections": "25",
-				"heartbeatsql"  : "select count(*) from dual",
-				"isolationlevel": "read_committed"
-		]
-
-		public static final String DEFAULT_PREFIX = "dataSource"
-
-		public static final String DEFAULT_SERVER = "db"
-
-		public SystemPropertyConfigPropertyMap() {
-			super(DEFAULT_PREFIX, DEFAULT_SERVER, new Properties())
-			propertyMap.putEvalAll(UOA_DEFAULTS)
-			properties.putAll(UOA_DEFAULTS)
-
-		}
-
-		@Override
-		public SystemPropertyConfigPropertyMap withPrefix(String prefix) {
-			return new SystemPropertyConfigPropertyMap()
-		}
-
-		@Override
-		public String get(String key, String defaultValue) {
-
-			if (key == null) {
-				return defaultValue;
-			}
-
-			// System Property is priority
-			String value = getValueFromMap(System.properties, key);
-
-			if (value == null) {
-				value = getValueFromMap(propertyMap.asProperties(), key);
-			}
-
-			if (value == null) {
-				value = getValueFromMap(propertyMap.asProperties(), key.toLowerCase());
-			}
-
-			return value == null ? defaultValue : value;
-		}
-
-		/**
-		 * get a value from map by key
-		 */
-		public String getValueFromMap(Map map, String key) {
-			String value = null;
-			if (serverName != null && prefix != null) {
-				value = map.get(prefix + "." + serverName + "." + key);
-			}
-			if (value == null && prefix != null) {
-				value = map.get(prefix + "." + key);
-			}
-			if (value == null) {
-				value = map.get(key);
-			}
-			return value;
-		}
-
+	@Override
+	protected void loadDataSourceSettings(PropertiesWrapper p) {
+		dataSourceConfig.loadSettings(p);
 	}
 
 }
