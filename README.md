@@ -32,8 +32,8 @@ Implied unless otherwise specified are:
     dataSource.heartbeatSql=select count(*) from dual
     dataSource.isolationLevel=read_committed
 
-Also, class _SystemPropertyWrapper_ that extends from _PropertiesWrapper_ will provide an additional feature, which is not only
-try to return a value from System Properties, also try to find and return a value from all registered ebean.properties.
+Also, class _SystemPropertyWrapper_ that extends from _PropertiesWrapper_ will provide an additional feature, which is not only try to return a value from System Properties, also try to find and return a value from all registered ebean.properties.
+
 At the same time, _SystemPropertyWrapper_ will scan all properties by a combined key that is using both "dataSource" and "ebean".
 
 For example, the "SystemPropertyWrapper" will return the correct value for both keys "username" and "password" based on following settings.
@@ -43,7 +43,7 @@ ebean.password=db-password
 
 **The property with "dataSource" as prefix will be treated as priority.**
 
-== Loading the agent
+## Loading the agent
 As Ebean, like all modern JPA frameworks, uses instrumentation, you can either specify the Ebean agent on your java run path:
 
 [source,bash]
