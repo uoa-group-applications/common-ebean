@@ -73,8 +73,7 @@ Then you can control whether Ebean actually logs, and what it logs using "named"
     <logger name="org.avaje.ebean.SUM" level="TRACE"/>
 
 ## Auto-scanning for entity classes
-SystemPropertyWrapper will automatically scan all libraries that contains "domain", and register them into the ClasspathSearch,
-so that the Ebean can auto-scan them for entity classes.
+_SystemPropertyWrapper_ will automatically scan all libraries that contains "domain" in path, and register them into the ClasspathSearch, so that the Ebean can automatically scan them for entity classes.
 
 However, you can setup "ebean.search.jars" in your /ebean.properties to override this behaviour.
 
