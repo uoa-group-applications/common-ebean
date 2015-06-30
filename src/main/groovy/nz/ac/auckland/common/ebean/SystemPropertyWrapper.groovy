@@ -141,13 +141,16 @@ public class SystemPropertyWrapper extends PropertiesWrapper {
 	protected void buildSearchJars(StringBuilder jars, List<URL> packages) {
 		packages.each { URL url ->
 			String fullPath = url.path
+			log.debug("Checking JAR for ClasspathSearch : {}", fullPath)
 			if ("jar".equalsIgnoreCase(url.protocol) && fullPath.endsWith('/')) {
 				fullPath = fullPath.substring(0, fullPath.length() - 1)
 			}
 			int position = fullPath.lastIndexOf('/')
 			fullPath = fullPath.substring(position + 1)
-			log.debug("Registering JAR for ClasspathSearch : {}", fullPath)
-			jars.append(fullPath).append(';')
+			if (fullPath.trim().length() > 0) {
+				log.debug("Registering JAR for ClasspathSearch : {}", fullPath)
+				jars.append(fullPath).append(';')
+			}
 		}
 	}
 
