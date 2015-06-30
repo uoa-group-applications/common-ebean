@@ -2,7 +2,10 @@
 
 This is a module to provide Ebean supports, and load the properties from System.properties instead of ebean.properties.
 
-The latest version V3.x has been re-implemented based on Ebean ORM version 4.7.1, which is because Ebean V4.5+ has been deprecated GlobalProperties class. If you have encounter any issues with V3.x, please raise the issue ticket, and restrict the version range as [2.2,3).
+The latest version V3.x has been re-implemented based on Ebean ORM version 4.7.1, which is because Ebean V4.5+ has been deprecated GlobalProperties class.
+If you have encounter any issues with V3.x, please raise the issue ticket, and restrict the version range as [2.2,3).
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/nz.ac.auckland.groupapps.common/common-ebean/badge.svg)](https://maven-badges.herokuapp.com/maven-central/nz.ac.auckland.groupapps.common/common-ebean)
 
 == Documentation
 How to use Ebean is covered in the PDF documentation for Ebean:
@@ -29,6 +32,17 @@ Implied unless otherwise specified are:
     dataSource.maxConnections=25
     dataSource.heartbeatSql=select count(*) from dual
     dataSource.isolationLevel=read_committed
+
+Also, class "SystemPropertyWrapper" that extends from PropertiesWrapper will provide an additional feature, which is not only
+try to return a value from System Properties, also try to find and return a value from all registered ebean.properties.
+At the same time, SystemPropertyWrapper will scan all properties by a combined key that is using both "dataSource" and "ebean".
+
+For example, the "SystemPropertyWrapper" will return the correct value for both keys "username" and "password" based on following settings.
+[source]
+dataSource.username=db-username
+ebean.password=db-password
+
+**The property with "dataSource" as prefix will be treated as priority.**
 
 == Loading the agent
 As Ebean, like all modern JPA frameworks, uses instrumentation, you can either specify the Ebean agent on your java run path:
@@ -65,8 +79,12 @@ Then you can control whether Ebean actually logs, and what it logs using "named"
     <logger name="org.avaje.ebean.SUM" level="TRACE"/>
 
 == Auto-scanning for entity classes
-To decrease startup time, you should include an entry in your /ebean.properties file:
+SystemPropertyWrapper will automatically scan all libraries that contains "domain", and register them into the ClasspathSearch,
+so that the Ebean can auto-scan them for entity classes.
 
+However, you can setup "ebean.search.jars" in your /ebean.properties to override this behaviour.
+
+[source]
 ebean.search.jars=jar-partial-name1, jar-partial-name2
 
 e.g.
@@ -78,5 +96,6 @@ or
 
 [source]
 ebean.search.jars=fat-domain,organization-domain
+
 
 
