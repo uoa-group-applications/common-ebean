@@ -13,14 +13,14 @@
 	<packaging>jar</packaging>
 
 	<name>common-ebean</name>
-	<version>3.4-SNAPSHOT</version>
+	<version>3.4</version>
 	<description>Provides Spring config and ServerConfig necessary to support ebean</description>
 
 	<scm>
 		<url>https://github.com/uoa-group-applications/common-ebean</url>
 		<connection>scm:git:https://github.com/uoa-group-applications/common-ebean.git</connection>
 		<developerConnection>scm:git:git@github.com:uoa-group-applications/common-ebean.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>common-ebean-3.4</tag>
   </scm>
 
 	<dependencies>
