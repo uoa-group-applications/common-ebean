@@ -19,7 +19,8 @@ public class SystemPropertyWrapper extends PropertiesWrapper {
 			"minConnections": "1",
 			"maxConnections": "25",
 			"heartbeatsql"  : "select count(*) from dual",
-			"isolationlevel": "read_committed"
+			"isolationlevel": "read_committed",
+			"classpathreader": "nz.ac.auckland.common.ebean.BatheClassPathSearch"
 	]
 
 	public static final String DEFAULT_PREFIX_EBEAN = "ebean"
@@ -29,9 +30,14 @@ public class SystemPropertyWrapper extends PropertiesWrapper {
 	public static final String DEFAULT_SERVER = "db"
 
 	/**
-	 * The property key for search.jars
+	 * The property key for jars
 	 */
 	public static final String JARS = "jars"
+
+	/**
+	 * The property key for search.jars
+	 */
+	public static final String SEARCH_JARS = "search.jars"
 
 	/**
 	 * Default Group ID for University Module
@@ -66,6 +72,10 @@ public class SystemPropertyWrapper extends PropertiesWrapper {
 		// This is an additional behaviour to automatically
 		if (JARS.equals(key) && value == null) {
 			value = getJarsWithUniversityGroupId()
+		}
+
+		if (log.isDebugEnabled() && SEARCH_JARS.equals(key)) {
+			log.debug("Ebean will scan entity classes from : {}", value == null ? defaultValue : value)
 		}
 
 		return value == null ? defaultValue : value;
@@ -142,8 +152,12 @@ public class SystemPropertyWrapper extends PropertiesWrapper {
 		packages.each { URL url ->
 			String fullPath = url.path
 			log.debug("Checking JAR for ClasspathSearch : {}", fullPath)
-			if ("jar".equalsIgnoreCase(url.protocol) && fullPath.endsWith('/')) {
-				fullPath = fullPath.substring(0, fullPath.length() - 1)
+			if ("jar".equalsIgnoreCase(url.protocol)) {
+				if (fullPath.endsWith("!/")) {
+					fullPath = fullPath.substring(0, fullPath.length() - 2)
+				} else if (fullPath.endsWith("/")) {
+					fullPath = fullPath.substring(0, fullPath.length() - 1)
+				}
 			}
 			int position = fullPath.lastIndexOf('/')
 			fullPath = fullPath.substring(position + 1)
